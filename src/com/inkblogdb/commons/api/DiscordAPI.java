@@ -11,11 +11,6 @@ import java.net.http.HttpResponse;
  */
 public class DiscordAPI {
 
-	/**Discord APIのベースURL */
-	private static final String API_URL = "https://discordapp.com/api/channels/";
-	/**Discord APIのメッセージ送信エンドポイント*/
-	private static final String API_MESSAGE_END_POINT = "/messages";
-
 	/**
 	 * Discord APIでメッセージを送信
 	 *
@@ -29,7 +24,7 @@ public class DiscordAPI {
 	 */
 	public static HttpResponse<String> sendMessage(final String token, final String channelId, final String message) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder()
-				.uri(URI.create(API_URL + channelId + API_MESSAGE_END_POINT))
+				.uri(URI.create("https://discordapp.com/api/channels/" + channelId + "/messages"))
 				.header("content-type", "application/json")
 				.header("Authorization", "Bot " + token)
 				.method("POST", HttpRequest.BodyPublishers.ofString("{\"content\":\"" + message + "\"}"))
