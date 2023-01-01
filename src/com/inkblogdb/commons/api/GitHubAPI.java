@@ -9,7 +9,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
 
-import com.inkblogdb.commons.utils.ConversionUtils;
+import com.inkblogdb.commons.utils.ConvertUtils;
 
 /**
  * @author ink-0x20
@@ -67,7 +67,7 @@ public class GitHubAPI {
 				.header("Accept", "application/vnd.github+json")
 				.header("Authorization", "Bearer " + token)
 				.header("X-GitHub-Api-Version", API_VERSION)
-				.method("POST", HttpRequest.BodyPublishers.ofString(ConversionUtils.mapTpJson(requestBody)))
+				.method("POST", HttpRequest.BodyPublishers.ofString(ConvertUtils.mapTpJson(requestBody)))
 				.build();
 		return HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
 	}

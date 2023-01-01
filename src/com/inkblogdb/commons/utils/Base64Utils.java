@@ -16,7 +16,7 @@ public class Base64Utils {
 	 * @return Base64エンコードされたデータ
 	 */
 	public static byte[] base64Encode(final String str) {
-		return base64Encode(ConversionUtils.stringToBytes(str, StandardCharsets.UTF_8));
+		return base64Encode(ConvertUtils.stringToBytes(str, StandardCharsets.UTF_8));
 	}
 
 	/**
@@ -35,7 +35,7 @@ public class Base64Utils {
 	 * @return Base64エンコードされたデータ
 	 */
 	public static String base64EncodeToString(final String str) {
-		return base64EncodeToString(ConversionUtils.stringToBytes(str, StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+		return base64EncodeToString(ConvertUtils.stringToBytes(str, StandardCharsets.UTF_8), StandardCharsets.UTF_8);
 	}
 
 	/**
@@ -45,7 +45,7 @@ public class Base64Utils {
 	 * @return Base64エンコードされたデータ
 	 */
 	public static byte[] base64Encode(final String str, final String charset) {
-		return base64Encode(ConversionUtils.stringToBytes(str, Charset.forName(charset)));
+		return base64Encode(ConvertUtils.stringToBytes(str, Charset.forName(charset)));
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class Base64Utils {
 	 * @return Base64エンコードされたデータ
 	 */
 	public static String base64EncodeToString(final String str, final String charset) {
-		return base64EncodeToString(ConversionUtils.stringToBytes(str, Charset.forName(charset)), Charset.forName(charset));
+		return base64EncodeToString(ConvertUtils.stringToBytes(str, Charset.forName(charset)), Charset.forName(charset));
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class Base64Utils {
 	 * @return Base64エンコードされたデータ
 	 */
 	public static byte[] base64Encode(final String str, final Charset charset) {
-		byte[] base64 = ConversionUtils.stringToBytes(str, charset);
+		byte[] base64 = ConvertUtils.stringToBytes(str, charset);
 		return base64Encode(base64);
 	}
 
@@ -87,7 +87,7 @@ public class Base64Utils {
 	 */
 	public static String base64EncodeToString(final byte[] bytes, final Charset charset) {
 		byte[] base64 = base64Encode(bytes);
-		return ConversionUtils.bytesToString(base64, charset);
+		return ConvertUtils.bytesToString(base64, charset);
 	}
 
 	/**
@@ -97,9 +97,9 @@ public class Base64Utils {
 	 * @return Base64エンコードされたデータ
 	 */
 	public static String base64EncodeToString(final String str, final Charset charset) {
-		byte[] base64 = ConversionUtils.stringToBytes(str, charset);
+		byte[] base64 = ConvertUtils.stringToBytes(str, charset);
 		base64 = base64Encode(base64);
-		return ConversionUtils.bytesToString(base64, charset);
+		return ConvertUtils.bytesToString(base64, charset);
 	}
 
 	/**
@@ -121,7 +121,7 @@ public class Base64Utils {
 	 * @return Base64デコードされたデータ
 	 */
 	public static byte[] base64Decode(final String str) {
-		return base64Decode(ConversionUtils.stringToBytes(str, StandardCharsets.UTF_8));
+		return base64Decode(ConvertUtils.stringToBytes(str, StandardCharsets.UTF_8));
 	}
 
 	/**
@@ -140,7 +140,7 @@ public class Base64Utils {
 	 * @return Base64デコードされたデータ
 	 */
 	public static String base64DecodeToString(final String str) {
-		return base64DecodeToString(ConversionUtils.stringToBytes(str, StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+		return base64DecodeToString(ConvertUtils.stringToBytes(str, StandardCharsets.UTF_8), StandardCharsets.UTF_8);
 	}
 
 	/**
@@ -150,7 +150,7 @@ public class Base64Utils {
 	 * @return Base64デコードされたデータ
 	 */
 	public static byte[] base64Decode(final String str, final String charset) {
-		return base64Decode(ConversionUtils.stringToBytes(str, Charset.forName(charset)));
+		return base64Decode(ConvertUtils.stringToBytes(str, Charset.forName(charset)));
 	}
 
 	/**
@@ -170,7 +170,7 @@ public class Base64Utils {
 	 * @return Base64デコードされたデータ
 	 */
 	public static String base64DecodeToString(final String str, final String charset) {
-		return base64DecodeToString(ConversionUtils.stringToBytes(str, Charset.forName(charset)), Charset.forName(charset));
+		return base64DecodeToString(ConvertUtils.stringToBytes(str, Charset.forName(charset)), Charset.forName(charset));
 	}
 
 	/**
@@ -180,7 +180,7 @@ public class Base64Utils {
 	 * @return Base64デコードされたデータ
 	 */
 	public static byte[] base64Decode(final String str, final Charset charset) {
-		byte[] base64 = ConversionUtils.stringToBytes(str, charset);
+		byte[] base64 = ConvertUtils.stringToBytes(str, charset);
 		return base64Decode(base64);
 	}
 
@@ -192,7 +192,7 @@ public class Base64Utils {
 	 */
 	public static String base64DecodeToString(final byte[] bytes, final Charset charset) {
 		byte[] base64 = base64Decode(bytes);
-		return ConversionUtils.bytesToString(base64, charset);
+		return ConvertUtils.bytesToString(base64, charset);
 	}
 
 	/**
@@ -202,9 +202,9 @@ public class Base64Utils {
 	 * @return Base64デコードされたデータ
 	 */
 	public static String base64DecodeToString(final String str, final Charset charset) {
-		byte[] base64 = ConversionUtils.stringToBytes(str, charset);
+		byte[] base64 = ConvertUtils.stringToBytes(str, charset);
 		base64 = base64Decode(base64);
-		return ConversionUtils.bytesToString(base64, charset);
+		return ConvertUtils.bytesToString(base64, charset);
 	}
 
 	/**

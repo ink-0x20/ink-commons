@@ -24,9 +24,9 @@ public class EncryptUtils {
 	/** byteずらし */
 	private static final int SHIFT_BYTE = 73;
 	/** 区切り文字1 */
-	private static final byte SPLIT1 = ConversionUtils.stringToBytes("_")[0];
+	private static final byte SPLIT1 = ConvertUtils.stringToBytes("_")[0];
 	/** 区切り文字2 */
-	private static final byte SPLIT2 = ConversionUtils.stringToBytes("-")[0];
+	private static final byte SPLIT2 = ConvertUtils.stringToBytes("-")[0];
 
 	/**
 	 * セキュアなランダムbyte配列を作成
@@ -51,7 +51,7 @@ public class EncryptUtils {
 	 * @throws NoSuchAlgorithmException 使用不可や不正なアルゴリズムの場合に発生
 	 */
 	public static String secureRandomString(int length) throws NoSuchAlgorithmException {
-		return ConversionUtils.bytesToString(secureRandomBytes(length));
+		return ConvertUtils.bytesToString(secureRandomBytes(length));
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class EncryptUtils {
 	 * @return 拡張子を付与した暗号文
 	 */
 	public static byte[] saveExtension(byte[] target, String extension) {
-		byte[] bytes = ArrayUtils.addAll(ConversionUtils.stringToBytes(extension), SPLIT2);
+		byte[] bytes = ArrayUtils.addAll(ConvertUtils.stringToBytes(extension), SPLIT2);
 		bytes = ArrayUtils.addAll(bytes, target);
 		return Base64.getEncoder().encode(bytes);
 	}
@@ -87,7 +87,7 @@ public class EncryptUtils {
 	public static String loadExtension(byte[] target) {
 		byte[] bytes = Base64.getDecoder().decode(target);
 		bytes = Arrays.copyOfRange(bytes, 0, ArrayUtils.indexOf(bytes, SPLIT2));
-		return ConversionUtils.bytesToString(bytes);
+		return ConvertUtils.bytesToString(bytes);
 	}
 
 	/**
@@ -134,7 +134,7 @@ public class EncryptUtils {
 	 * @throws IllegalBlockSizeException ブロック暗号に提供されたデータの長さが正しくない場合、つまり暗号のブロック・サイズと一致しない場合に発生
 	 */
 	public static byte[] doEncrypt(byte[] target, String encryptKey) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
-		return manageEncrypt(EncryptAlgorithm.AES, target, ConversionUtils.stringToBytes(encryptKey), null);
+		return manageEncrypt(EncryptAlgorithm.AES, target, ConvertUtils.stringToBytes(encryptKey), null);
 	}
 
 	/**
@@ -168,7 +168,7 @@ public class EncryptUtils {
 	 * @throws IllegalBlockSizeException ブロック暗号に提供されたデータの長さが正しくない場合、つまり暗号のブロック・サイズと一致しない場合に発生
 	 */
 	public static byte[] doEncrypt(byte[] target, String encryptKey, String ivKey) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
-		return manageEncrypt(EncryptAlgorithm.AES, target, ConversionUtils.stringToBytes(encryptKey), ConversionUtils.stringToBytes(ivKey));
+		return manageEncrypt(EncryptAlgorithm.AES, target, ConvertUtils.stringToBytes(encryptKey), ConvertUtils.stringToBytes(ivKey));
 	}
 
 	/**
@@ -218,7 +218,7 @@ public class EncryptUtils {
 	 * @throws IllegalBlockSizeException ブロック暗号に提供されたデータの長さが正しくない場合、つまり暗号のブロック・サイズと一致しない場合に発生
 	 */
 	public static byte[] doEncrypt(EncryptAlgorithm algorithm, byte[] target, String encryptKey) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
-		return manageEncrypt(algorithm, target, ConversionUtils.stringToBytes(encryptKey), null);
+		return manageEncrypt(algorithm, target, ConvertUtils.stringToBytes(encryptKey), null);
 	}
 
 	/**
@@ -254,7 +254,7 @@ public class EncryptUtils {
 	 * @throws IllegalBlockSizeException ブロック暗号に提供されたデータの長さが正しくない場合、つまり暗号のブロック・サイズと一致しない場合に発生
 	 */
 	public static byte[] doEncrypt(EncryptAlgorithm algorithm, byte[] target, String encryptKey, String ivKey) throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidAlgorithmParameterException, IllegalBlockSizeException, BadPaddingException {
-		return manageEncrypt(algorithm, target, ConversionUtils.stringToBytes(encryptKey), ConversionUtils.stringToBytes(ivKey));
+		return manageEncrypt(algorithm, target, ConvertUtils.stringToBytes(encryptKey), ConvertUtils.stringToBytes(ivKey));
 	}
 
 	/**
@@ -301,7 +301,7 @@ public class EncryptUtils {
 	 * @throws IllegalBlockSizeException ブロック暗号に提供されたデータの長さが正しくない場合、つまり暗号のブロック・サイズと一致しない場合に発生
 	 */
 	public static byte[] doDecrypt(byte[] target, String encryptKey) throws InvalidKeyException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
-		return manageDecrypt(EncryptAlgorithm.AES, target, ConversionUtils.stringToBytes(encryptKey), null);
+		return manageDecrypt(EncryptAlgorithm.AES, target, ConvertUtils.stringToBytes(encryptKey), null);
 	}
 
 	/**
@@ -335,7 +335,7 @@ public class EncryptUtils {
 	 * @throws IllegalBlockSizeException ブロック暗号に提供されたデータの長さが正しくない場合、つまり暗号のブロック・サイズと一致しない場合に発生
 	 */
 	public static byte[] doDecrypt(byte[] target, String encryptKey, String ivKey) throws InvalidKeyException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
-		return manageDecrypt(EncryptAlgorithm.AES, target, ConversionUtils.stringToBytes(encryptKey), ConversionUtils.stringToBytes(ivKey));
+		return manageDecrypt(EncryptAlgorithm.AES, target, ConvertUtils.stringToBytes(encryptKey), ConvertUtils.stringToBytes(ivKey));
 	}
 
 	/**
@@ -385,7 +385,7 @@ public class EncryptUtils {
 	 * @throws IllegalBlockSizeException ブロック暗号に提供されたデータの長さが正しくない場合、つまり暗号のブロック・サイズと一致しない場合に発生
 	 */
 	public static byte[] doDecrypt(EncryptAlgorithm algorithm, byte[] target, String encryptKey) throws InvalidKeyException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
-		return manageDecrypt(algorithm, target, ConversionUtils.stringToBytes(encryptKey), null);
+		return manageDecrypt(algorithm, target, ConvertUtils.stringToBytes(encryptKey), null);
 	}
 
 	/**
@@ -421,7 +421,7 @@ public class EncryptUtils {
 	 * @throws IllegalBlockSizeException ブロック暗号に提供されたデータの長さが正しくない場合、つまり暗号のブロック・サイズと一致しない場合に発生
 	 */
 	public static byte[] doDecrypt(EncryptAlgorithm algorithm, byte[] target, String encryptKey, String ivKey) throws InvalidKeyException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException {
-		return manageDecrypt(algorithm, target, ConversionUtils.stringToBytes(encryptKey), ConversionUtils.stringToBytes(ivKey));
+		return manageDecrypt(algorithm, target, ConvertUtils.stringToBytes(encryptKey), ConvertUtils.stringToBytes(ivKey));
 	}
 
 

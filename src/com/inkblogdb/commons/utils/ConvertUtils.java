@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 /**
  * @author ink-0x20
  */
-public class ConversionUtils {
+public class ConvertUtils {
 
 	/**
 	 * 文字列をbyte配列に変換
@@ -36,7 +36,7 @@ public class ConversionUtils {
 	 * @return 文字列をbyte配列に変換した結果
 	 */
 	public static byte[] stringToBytes(final String str, final Charset charset) {
-		if (str == null) {
+		if (StringUtils.isBlank(str)) {
 			return new byte[0];
 		}
 		return str.getBytes(charset);
@@ -103,6 +103,42 @@ public class ConversionUtils {
 		stringBuilder.deleteCharAt(stringBuilder.length() - 1);
 		stringBuilder.append("}");
 		return stringBuilder.toString();
+	}
+
+	/**
+	 * 文字列の改行コードをCrに統一
+	 * @param str 文字列
+	 * @return 改行コードをCrに置換した文字列
+	 */
+	public static final String replaceToCr(final String str) {
+		if (StringUtils.isBlank(str)) {
+			return "";
+		}
+		return str.replaceAll("\r\n|\r|\n", "\r");
+	}
+
+	/**
+	 * 文字列の改行コードをLfに統一
+	 * @param str 文字列
+	 * @return 改行コードをLfに置換した文字列
+	 */
+	public static final String replaceToLf(final String str) {
+		if (StringUtils.isBlank(str)) {
+			return "";
+		}
+		return str.replaceAll("\r\n|\r|\n", "\n");
+	}
+
+	/**
+	 * 文字列の改行コードをCrLfに統一
+	 * @param str 文字列
+	 * @return 改行コードをCrLfに置換した文字列
+	 */
+	public static final String replaceToCrLf(final String str) {
+		if (StringUtils.isBlank(str)) {
+			return "";
+		}
+		return str.replaceAll("\r\n|\r|\n", "\r\n");
 	}
 
 }
