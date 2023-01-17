@@ -52,4 +52,51 @@ public class StringUtils {
 		return str == null ? defaultStr : str;
 	}
 
+	/**
+	 * すべての文字列を連結
+	 * @param str 文字列
+	 * @return 連結文字列
+	 */
+	public static final String join(final String... str) {
+		if (str == null) {
+			return null;
+		}
+		if (str.length == 0) {
+			return "";
+		}
+		StringBuilder stringBuilder = new StringBuilder();
+		for (String s : str) {
+			stringBuilder.append(s);
+		}
+		return stringBuilder.toString();
+	}
+
+	/**
+	 * 文字列を分割
+	 * @param str 文字列
+	 * @param separatorStr 区切り文字列
+	 * @return 分割文字列
+	 */
+	public static final String[] split(final String str, final String separatorStr) {
+		if (str == null) {
+			return null;
+		}
+		if (separatorStr == null) {
+			return str.split("");
+		}
+		return str.split(separatorStr);
+	}
+
+	/**
+	 * 文字列をトリム
+	 * @param str 文字列
+	 * @return トリムした文字列
+	 */
+	public static final String trim(final String str) {
+		if (str == null) {
+			return null;
+		}
+		return str.trim();
+	}
+
 }
