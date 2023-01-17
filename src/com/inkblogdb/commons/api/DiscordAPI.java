@@ -6,6 +6,9 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+import com.inkblogdb.commons.utils.ConvertUtils;
+import com.inkblogdb.commons.utils.StringUtils;
+
 /**
  * @author ink-0x20
  */
@@ -22,14 +25,30 @@ public class DiscordAPI {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public static HttpResponse<String> sendMessage(final String token, final String channelId, final String message) throws IOException, InterruptedException {
+	public static final HttpResponse<String> sendMessage(final String token, final String channelId, final String message) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create("https://discordapp.com/api/channels/" + channelId + "/messages"))
 				.header("content-type", "application/json")
 				.header("Authorization", "Bot " + token)
-				.method("POST", HttpRequest.BodyPublishers.ofString("{\"content\":\"" + message + "\"}"))
+				.method("POST", HttpRequest.BodyPublishers.ofString("{\"content\":\"" + escapeMessage(message) + "\"}"))
 				.build();
 		return HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+	}
+
+	/**
+	 * APIメッセージ用にエスケープ
+	 * @param message メッセージ
+	 * @return エスケープメッセージ
+	 */
+	public static final String escapeMessage(final String message) {
+		if (StringUtils.isBlank(message)) {
+			return "";
+		}
+		String str = message;
+		// 改行コード置換
+		str = ConvertUtils.replaceToLf(str);
+		str = str.replaceAll("\n", "\\\\n");
+		return str;
 	}
 
 }
