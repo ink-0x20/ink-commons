@@ -1,4 +1,4 @@
-package com.inkblogdb.commons.utils;
+package com.inkblogdb.commons.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

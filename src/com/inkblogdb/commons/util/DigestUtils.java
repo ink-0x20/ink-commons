@@ -1,4 +1,4 @@
-package com.inkblogdb.commons.utils;
+package com.inkblogdb.commons.util;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

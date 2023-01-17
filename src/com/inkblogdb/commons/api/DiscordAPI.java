@@ -6,8 +6,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
-import com.inkblogdb.commons.utils.ConvertUtils;
-import com.inkblogdb.commons.utils.StringUtils;
+import com.inkblogdb.commons.util.ConvertUtils;
+import com.inkblogdb.commons.util.StringUtils;
 
 /**
  * @author ink-0x20

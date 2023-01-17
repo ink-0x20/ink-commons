@@ -1,4 +1,4 @@
-package com.inkblogdb.commons.utils;
+package com.inkblogdb.commons.util;
 
 import java.util.regex.Pattern;
 
