@@ -28,7 +28,7 @@ public class GitHubAPI {
 	 * @param response APIレスポンス
 	 * @return APIが正常の場合true
 	 */
-	public static boolean isSuccesses(final HttpResponse<String> response) {
+	public static final boolean isSuccesses(final HttpResponse<String> response) {
 		return response.statusCode() == SUCCESS_STATUS_CODE;
 	}
 
@@ -38,7 +38,7 @@ public class GitHubAPI {
 	 * @param response APIレスポンス
 	 * @return APIが正常の場合true
 	 */
-	public static boolean isFailed(final HttpResponse<String> response) {
+	public static final boolean isFailed(final HttpResponse<String> response) {
 		return !isSuccesses(response);
 	}
 
@@ -56,7 +56,7 @@ public class GitHubAPI {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public static HttpResponse<String> makeRelease(final String owner, final String repo, final String token, final String tagName, final String commitish, final String body) throws IOException, InterruptedException {
+	public static final HttpResponse<String> makeRelease(final String owner, final String repo, final String token, final String tagName, final String commitish, final String body) throws IOException, InterruptedException {
 		HashMap<String, Object> requestBody = new HashMap<>();
 		requestBody.put("name", tagName);
 		requestBody.put("tag_name", tagName);
@@ -86,7 +86,7 @@ public class GitHubAPI {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public static HttpResponse<String> uploadRelease(final String owner, final String repo, final String releaseId, final String fileName, final String token, final byte[] data) throws IOException, InterruptedException {
+	public static final HttpResponse<String> uploadRelease(final String owner, final String repo, final String releaseId, final String fileName, final String token, final byte[] data) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create("https://uploads.github.com/repos/" + owner + "/" + repo + "/releases/" + releaseId + "/assets?name=" + fileName))
 				.header("Accept", "application/vnd.github+json")
@@ -112,7 +112,7 @@ public class GitHubAPI {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public static HttpResponse<String> uploadRelease(final String owner, final String repo, final String releaseId, final String filePath, final String token) throws IOException, InterruptedException {
+	public static final HttpResponse<String> uploadRelease(final String owner, final String repo, final String releaseId, final String filePath, final String token) throws IOException, InterruptedException {
 		File dataFile = new File(filePath);
 		if (!dataFile.exists()) {
 			return null;
