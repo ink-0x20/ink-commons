@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.util.HashMap;
 
 import com.inkblogdb.commons.util.ConvertUtils;
@@ -67,9 +69,9 @@ public class GitHubAPI {
 				.header("Accept", "application/vnd.github+json")
 				.header("Authorization", "Bearer " + token)
 				.header("X-GitHub-Api-Version", API_VERSION)
-				.method("POST", HttpRequest.BodyPublishers.ofString(ConvertUtils.mapTpJson(requestBody)))
+				.method("POST", BodyPublishers.ofString(ConvertUtils.mapTpJson(requestBody)))
 				.build();
-		return HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+		return HttpClient.newHttpClient().send(request, BodyHandlers.ofString());
 	}
 
 	/**
@@ -93,9 +95,9 @@ public class GitHubAPI {
 				.header("Authorization", "Bearer " + token)
 				.header("X-GitHub-Api-Version", API_VERSION)
 				.header("Content-Type", "multipart/form-data")
-				.method("POST", HttpRequest.BodyPublishers.ofByteArray(data))
+				.method("POST", BodyPublishers.ofByteArray(data))
 				.build();
-		return HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+		return HttpClient.newHttpClient().send(request, BodyHandlers.ofString());
 	}
 
 	/**

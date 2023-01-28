@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 
 import com.inkblogdb.commons.util.ConvertUtils;
 import com.inkblogdb.commons.util.StringUtils;
@@ -30,9 +32,9 @@ public class DiscordAPI {
 				.uri(URI.create("https://discordapp.com/api/channels/" + channelId + "/messages"))
 				.header("content-type", "application/json")
 				.header("Authorization", "Bot " + token)
-				.method("POST", HttpRequest.BodyPublishers.ofString("{\"content\":\"" + escapeMessage(message) + "\"}"))
+				.method("POST", BodyPublishers.ofString("{\"content\":\"" + escapeMessage(message) + "\"}"))
 				.build();
-		return HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+		return HttpClient.newHttpClient().send(request, BodyHandlers.ofString());
 	}
 
 	/**
