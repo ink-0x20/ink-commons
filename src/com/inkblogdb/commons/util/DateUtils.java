@@ -222,6 +222,35 @@ public class DateUtils {
 	}
 
 	/**
+	 * 指定のフォーマットの文字列に変換
+	 * @param date 日時
+	 * @param format フォーマット
+	 * @return 文字列
+	 */
+	public static final String toString(final long date, final String format) {
+		return toString(date, format, Locale.JAPANESE);
+	}
+
+	/**
+	 * 指定のフォーマットの文字列に変換
+	 * @param date 日時
+	 * @param format フォーマット
+	 * @param locale ロケール
+	 * @return 文字列
+	 */
+	public static final String toString(final long date, final String format, final Locale locale) {
+		if (StringUtils.isBlank(format)) {
+			return null;
+		}
+		Locale l = locale;
+		if (locale == null) {
+			l = Locale.JAPANESE;
+		}
+		SimpleDateFormat dateFormat = new SimpleDateFormat(format, l);
+		return dateFormat.format(new Date(date));
+	}
+
+	/**
 	 * LocalDate形式に変換
 	 * @param date 変換したいクラス
 	 * @param format フォーマット
@@ -331,6 +360,29 @@ public class DateUtils {
 	}
 
 	/**
+	 * LocalDate形式に変換
+	 * @param date 変換したいクラス
+	 * @return LocalDate形式の日時
+	 */
+	public static final LocalDate toLocalDate(final long date) {
+		return toLocalDate(date, ZoneId.systemDefault());
+	}
+
+	/**
+	 * LocalDate形式に変換
+	 * @param date 変換したいクラス
+	 * @param zoneId ゾーン
+	 * @return LocalDate形式の日時
+	 */
+	public static final LocalDate toLocalDate(final long date, final ZoneId zoneId) {
+		ZoneId z = zoneId;
+		if (zoneId == null) {
+			z = ZoneId.systemDefault();
+		}
+		return LocalDate.ofInstant(new Date(date).toInstant(), z);
+	}
+
+	/**
 	 * LocalDateTime形式に変換
 	 * @param date 変換したいクラス
 	 * @param format フォーマット
@@ -437,6 +489,29 @@ public class DateUtils {
 		}
 		Date date = new Date(sqlDate.getTime());
 		return LocalDateTime.ofInstant(date.toInstant(), z);
+	}
+
+	/**
+	 * LocalDateTime形式に変換
+	 * @param date 変換したいクラス
+	 * @return LocalDateTime形式の日時
+	 */
+	public static final LocalDateTime toLocalDateTime(final long date) {
+		return toLocalDateTime(date, ZoneId.systemDefault());
+	}
+
+	/**
+	 * LocalDateTime形式に変換
+	 * @param date 変換したいクラス
+	 * @param zoneId ゾーン
+	 * @return LocalDateTime形式の日時
+	 */
+	public static final LocalDateTime toLocalDateTime(final long date, final ZoneId zoneId) {
+		ZoneId z = zoneId;
+		if (zoneId == null) {
+			z = ZoneId.systemDefault();
+		}
+		return LocalDateTime.ofInstant(new Date(date).toInstant(), z);
 	}
 
 	/**
@@ -606,6 +681,29 @@ public class DateUtils {
 	}
 
 	/**
+	 * ZonedDateTime形式に変換
+	 * @param date 変換したいクラス
+	 * @return ZonedDateTime形式の日時
+	 */
+	public static final ZonedDateTime toZonedDateTime(final long date) {
+		return toZonedDateTime(date, ZoneId.systemDefault());
+	}
+
+	/**
+	 * ZonedDateTime形式に変換
+	 * @param date 変換したいクラス
+	 * @param zoneId ゾーン
+	 * @return ZonedDateTime形式の日時
+	 */
+	public static final ZonedDateTime toZonedDateTime(final long date, final ZoneId zoneId) {
+		ZoneId z = zoneId;
+		if (zoneId == null) {
+			z = ZoneId.systemDefault();
+		}
+		return ZonedDateTime.ofInstant(new Date(date).toInstant(), z);
+	}
+
+	/**
 	 * Date形式に変換
 	 * @param date 変換したいクラス
 	 * @param format フォーマット
@@ -719,6 +817,15 @@ public class DateUtils {
 	}
 
 	/**
+	 * Date形式に変換
+	 * @param date 変換したいクラス
+	 * @return Date形式の日時
+	 */
+	public static final Date toDate(final long date) {
+		return new Date(date);
+	}
+
+	/**
 	 * SqlDate形式に変換
 	 * @param date 変換したいクラス
 	 * @param format フォーマット
@@ -798,6 +905,140 @@ public class DateUtils {
 			return null;
 		}
 		return new java.sql.Date(date.getTime());
+	}
+
+	/**
+	 * SqlDate形式に変換
+	 * @param date 変換したいクラス
+	 * @return SqlDate形式の日時
+	 */
+	public static final java.sql.Date toSqlDate(final long date) {
+		return new java.sql.Date(date);
+	}
+
+	/**
+	 * long形式に変換
+	 * @param date 変換したいクラス
+	 * @param format フォーマット
+	 * @return long形式の日時
+	 * @throws ParseException 変換失敗
+	 */
+	public static final long toLong(final String date, final String format) throws ParseException {
+		return toLong(date, format, Locale.JAPANESE);
+	}
+
+	/**
+	 * long形式に変換
+	 * @param date 変換したいクラス
+	 * @param format フォーマット
+	 * @param locale ロケール
+	 * @return long形式の日時
+	 * @throws ParseException 変換失敗
+	 */
+	public static final long toLong(final String date, final String format, final Locale locale) throws ParseException {
+		if (StringUtils.isBlank(date)) {
+			return 0;
+		}
+		if (StringUtils.isBlank(format)) {
+			return 0;
+		}
+		Locale l = locale;
+		if (locale == null) {
+			l = Locale.JAPANESE;
+		}
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, l);
+		return simpleDateFormat.parse(date).getTime();
+	}
+
+	/**
+	 * long形式に変換
+	 * @param localDate 変換したいクラス
+	 * @return long形式の日時
+	 */
+	public static final long toLong(final LocalDate localDate) {
+		return toLong(localDate, ZoneId.systemDefault());
+}
+
+	/**
+	 * long形式に変換
+	 * @param localDate 変換したいクラス
+	 * @param zoneId ゾーン
+	 * @return long形式の日時
+	 */
+	public static final long toLong(final LocalDate localDate, final ZoneId zoneId) {
+		if (localDate == null) {
+			return 0;
+		}
+		ZoneId z = zoneId;
+		if (zoneId == null) {
+			z = ZoneId.systemDefault();
+		}
+		LocalDateTime localDateTime = localDate.atStartOfDay();
+		ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, z);
+		return Date.from(zonedDateTime.toInstant()).getTime();
+	}
+
+	/**
+	 * long形式に変換
+	 * @param localDateTime 変換したいクラス
+	 * @return long形式の日時
+	 */
+	public static final long toLong(final LocalDateTime localDateTime) {
+		return toLong(localDateTime, ZoneId.systemDefault());
+	}
+
+	/**
+	 * long形式に変換
+	 * @param localDateTime 変換したいクラス
+	 * @param zoneId ゾーン
+	 * @return long形式の日時
+	 */
+	public static final long toLong(final LocalDateTime localDateTime, final ZoneId zoneId) {
+		if (localDateTime == null) {
+			return 0;
+		}
+		ZoneId z = zoneId;
+		if (zoneId == null) {
+			z = ZoneId.systemDefault();
+		}
+		ZonedDateTime zonedDateTime = ZonedDateTime.of(localDateTime, z);
+		return Date.from(zonedDateTime.toInstant()).getTime();
+	}
+
+	/**
+	 * long形式に変換
+	 * @param zonedDateTime 変換したいクラス
+	 * @return long形式の日時
+	 */
+	public static final long toLong(final ZonedDateTime zonedDateTime) {
+		if (zonedDateTime == null) {
+			return 0;
+		}
+		return Date.from(zonedDateTime.toInstant()).getTime();
+	}
+
+	/**
+	 * long形式に変換
+	 * @param date 変換したいクラス
+	 * @return long形式の日時
+	 */
+	public static final long toLong(final Date date) {
+		if (date == null) {
+			return 0;
+		}
+		return date.getTime();
+	}
+
+	/**
+	 * long形式に変換
+	 * @param sqlDate 変換したいクラス
+	 * @return long形式の日時
+	 */
+	public static final long toLong(final java.sql.Date sqlDate) {
+		if (sqlDate == null) {
+			return 0;
+		}
+		return new Date(sqlDate.getTime()).getTime();
 	}
 
 }
