@@ -59,7 +59,7 @@ public class StringUtils {
 	 */
 	public static final String join(final String... str) {
 		if (str == null) {
-			return null;
+			return "";
 		}
 		if (str.length == 0) {
 			return "";
@@ -94,9 +94,34 @@ public class StringUtils {
 	 */
 	public static final String trim(final String str) {
 		if (str == null) {
-			return null;
+			return "";
 		}
 		return str.trim();
+	}
+
+	/**
+	 * 文字列を囲う
+	 * @param str 囲われる文字列
+	 * @param enclose 囲う文字列
+	 * @return 文字列
+	 */
+	public static final String enclose(final String str, final String enclose) {
+		if (str == null) {
+			return "";
+		}
+		if (enclose == null) {
+			return str;
+		}
+		String value = trim(str);
+		StringBuilder stringBuilder = new StringBuilder();
+		if (!value.startsWith(enclose)) {
+			stringBuilder.append(enclose);
+		}
+		stringBuilder.append(value);
+		if (!value.endsWith(enclose)) {
+			stringBuilder.append(enclose);
+		}
+		return stringBuilder.toString();
 	}
 
 }
