@@ -693,6 +693,7 @@ public class SqlBuilder {
 				}
 			}
 		}
+		sql.append(values.toString());
 		return true;
 	}
 
@@ -701,6 +702,15 @@ public class SqlBuilder {
 	 * @return SELECT SQL
 	 */
 	public final String toSelectSQL() {
+		return toSelectSQL(null);
+	}
+
+	/**
+	 * SELECTのSQLを返却
+	 * @param count カウントするカラム、またはアスタリスク
+	 * @return SELECT SQL
+	 */
+	public final String toSelectSQL(final String count) {
 		StringBuilder sql = new StringBuilder();
 		// EXPLAIN
 		if (this.isExplain) {
@@ -712,10 +722,16 @@ public class SqlBuilder {
 			sql.append("DISTINCT ");
 		}
 		// カラム追加
-		if (this.columnList.size() == 0) {
-			sql.append("*");
+		if (StringUtils.isBlank(count)) {
+			if (this.columnList.size() == 0) {
+				sql.append("*");
+			} else {
+				toSqlFormat(sql, this.columnList, null, ", ");
+			}
 		} else {
-			toSqlFormat(sql, this.columnList, null, ", ");
+			sql.append("COUNT(");
+			sql.append(count);
+			sql.append(") AS RECORD_COUNT_ALIAS");
 		}
 		// テーブル追加
 		sql.append(" FROM ");
@@ -822,7 +838,7 @@ public class SqlBuilder {
 	 * @return UPDATE SQL
 	 */
 	public final String toUpdateSQL() {
-		if (this.insertDataList.size() == 0) {
+		if (this.updateDataList.size() == 0) {
 			return "";
 		}
 		// SQL作成
@@ -838,6 +854,33 @@ public class SqlBuilder {
 	}
 
 	/**
+	 * レコード数を取得
+	 * @return レコード数
+	 * @throws SQLException
+	 * @throws NamingException
+	 */
+	public final long count() throws SQLException, NamingException {
+		return count("*");
+	}
+
+	/**
+	 * レコード数を取得
+	 * @param count カウントするカラム、またはアスタリスク
+	 * @return レコード数
+	 * @throws SQLException
+	 * @throws NamingException
+	 */
+	@SuppressWarnings("boxing")
+	public final long count(final String count) throws SQLException, NamingException {
+		this.limit = 1;
+		List<Map<String, Object>> result = executeSelect(true, count);
+		if (result.size() == 0) {
+			return 0;
+		}
+		return (long) result.get(0).get("RECORD_COUNT_ALIAS");
+	}
+
+	/**
 	 * 1件のみ検索を実行
 	 * @return 1件のみの検索結果
 	 * @throws SQLException
@@ -845,11 +888,11 @@ public class SqlBuilder {
 	 */
 	public final Map<String, Object> getFirst() throws SQLException, NamingException {
 		this.limit = 1;
-		List<Map<String, Object>> result = executeSelect(true);
+		List<Map<String, Object>> result = executeSelect(true, null);
 		if (result.size() == 0) {
 			return new LinkedHashMap<>();
 		}
-		return executeSelect(true).get(0);
+		return result.get(0);
 	}
 
 	/**
@@ -898,7 +941,7 @@ public class SqlBuilder {
 	 * @throws NamingException
 	 */
 	public final List<Map<String, Object>> get() throws SQLException, NamingException {
-		return executeSelect(false);
+		return executeSelect(false, null);
 	}
 
 	/**
@@ -947,12 +990,12 @@ public class SqlBuilder {
 	 * @throws SQLException
 	 * @throws NamingException
 	 */
-	private final List<Map<String, Object>> executeSelect(final boolean isFirst) throws SQLException, NamingException {
+	private final List<Map<String, Object>> executeSelect(final boolean isFirst, final String count) throws SQLException, NamingException {
 		if (StringUtils.isBlank(this.table)) {
 			throw new IllegalArgumentException("table is empty");
 		}
 		try (Connection connection = getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(toSelectSQL());
+				PreparedStatement preparedStatement = connection.prepareStatement(toSelectSQL(count));
 				ResultSet resultSet = preparedStatement.executeQuery();) {
 			// メタデータ取得
 			ResultSetMetaData meta = resultSet.getMetaData();
@@ -997,6 +1040,43 @@ public class SqlBuilder {
 						setStatementValue(preparedStatement, paramIndex, data.getValue());
 						paramIndex++;
 					}
+				}
+				preparedStatement.addBatch();
+			} else {
+				preparedStatement.addBatch();
+			}
+			int[] count = preparedStatement.executeBatch();
+			connection.commit();
+			// int配列をInteger配列に変換して返す
+			return Arrays.stream(count)
+					.boxed()
+					.toArray(Integer[]::new);
+		} catch (SQLException e) {
+			throw e;
+		} catch (NamingException e) {
+			throw e;
+		}
+	}
+
+	/**
+	 * updateSQLを実行
+	 * @return 更新行数
+	 * @throws SQLException
+	 * @throws NamingException
+	 */
+	public final Integer[] update() throws SQLException, NamingException {
+		if (StringUtils.isBlank(this.table)) {
+			throw new IllegalArgumentException("table is empty");
+		}
+		try (Connection connection = getConnection();
+				PreparedStatement preparedStatement = connection.prepareStatement(toUpdateSQL());) {
+			if (this.isStakeHolder) {
+				// ステークホルダーに値をセット
+				int paramIndex = 1;
+				Map<String, Object> datas = this.updateDataList.get(0);
+				for (Entry<String, Object> data : datas.entrySet()) {
+					setStatementValue(preparedStatement, paramIndex, data.getValue());
+					paramIndex++;
 				}
 				preparedStatement.addBatch();
 			} else {
