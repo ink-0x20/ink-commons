@@ -24,7 +24,62 @@ public class UrlUtils {
 		if (j == -1) {
 			return url;
 		}
-		return url.substring(i, j);
+		return getDomain(url, true, true);
+	}
+
+	/**
+	 * URLからドメインを抜き出し
+	 * @param url ドメインを特定したいURL
+	 * @param isHost ホスト(www.等)
+	 * @param isTopLevelDomain トップレベルドメイン(.com等)
+	 * @return ドメイン
+	 */
+	public static final String getDomain(final String url, final boolean isHost, final boolean isTopLevelDomain) {
+		if (StringUtils.isBlank(url)) {
+			return "";
+		}
+		String domain = null;
+		// 開始位置
+		int first = url.indexOf("://");
+		if (first == -1) {
+			return url;
+		}
+		first += 3;
+		// 終了位置
+		int last = url.indexOf("/", first);
+		if (last == -1) {
+			// 最後まで
+			domain = url.substring(first);
+		} else {
+			domain = url.substring(first, last);
+		}
+		// ホスト・ドメイン・トップレベルドメインに分割
+		String[] domains = domain.split("\\.");
+		if (domains.length == 2) {
+			if (isTopLevelDomain) {
+				// ドメイン + トップレベルドメイン
+				return domain;
+			}
+			// ドメイン
+			return domains[0];
+		}
+		if (domains.length == 3) {
+			if (isHost) {
+				if (isTopLevelDomain) {
+					// ホスト + ドメイン + トップレベルドメイン
+					return domain;
+				}
+				// ホスト + ドメイン
+				return domains[0] + "." + domains[1];
+			}
+			if (isTopLevelDomain) {
+				// ドメイン + トップレベルドメイン
+				return domains[1] + "." + domains[2];
+			}
+			// ドメイン
+			return domains[1];
+		}
+		return domain;
 	}
 
 	/**
