@@ -1,5 +1,7 @@
 package com.inkblogdb.commons.util;
 
+import java.lang.Character.UnicodeBlock;
+
 /**
  * @author ink-0x20
  *
@@ -122,6 +124,74 @@ public class StringUtils {
 			stringBuilder.append(enclose);
 		}
 		return stringBuilder.toString();
+	}
+
+	/**
+	 * 文字列にひらがなが含まれているかどうか判定
+	 * @param str 文字列
+	 * @return ひらがなが含まれているかどうか
+	 */
+	public static final boolean containsHiragana(final String str) {
+		return containsUnicodeBlocks(str
+				, UnicodeBlock.HIRAGANA);
+	}
+
+	/**
+	 * 文字列にカタカナが含まれているかどうか判定
+	 * @param str 文字列
+	 * @return カタカナが含まれているかどうか
+	 */
+	public static final boolean containsKatagana(final String str) {
+		return containsUnicodeBlocks(str
+				, UnicodeBlock.KATAKANA);
+	}
+
+	/**
+	 * 文字列に半角カタカナか全角アルファベットが含まれているかどうか判定
+	 * @param str 文字列
+	 * @return 半角カタカナか全角アルファベットが含まれているかどうか
+	 */
+	public static final boolean containsHalfWidthAndFullWidthForms(final String str) {
+		return containsUnicodeBlocks(str
+				, UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS);
+	}
+
+	/**
+	 * 文字列に日本語が含まれているかどうか判定
+	 * 日本語を扱うにおいて、ひらがなとカタカナがあることを前提で判定する
+	 * 漢字があるかどうかは判定材料とはしない
+	 * @param str 文字列
+	 * @return 日本語が含まれているかどうか
+	 */
+	public static final boolean containsJapanese(final String str) {
+		return containsUnicodeBlocks(str
+				, UnicodeBlock.HIRAGANA
+				, UnicodeBlock.KATAKANA
+				, UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS);
+	}
+
+	/**
+	 * 文字列にUnicodeBlockが含まれているかどうか判定
+	 * @param str 文字列
+	 * @param containsUnicodeBlock UnicodeBlock
+	 * @return UnicodeBlockが含まれているかどうか
+	 */
+	public static final boolean containsUnicodeBlocks(final String str, final UnicodeBlock... containsUnicodeBlock) {
+		if (str == null) {
+			return false;
+		}
+		for (char ch : str.toCharArray()) {
+			UnicodeBlock unicodeBlock = UnicodeBlock.of(ch);
+			for (UnicodeBlock checkUnicodeBlock : containsUnicodeBlock) {
+				if (checkUnicodeBlock == null) {
+					continue;
+				}
+				if (checkUnicodeBlock.equals(unicodeBlock)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 }
