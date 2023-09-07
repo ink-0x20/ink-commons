@@ -32,7 +32,7 @@ public class DiscordAPI {
 				.uri(URI.create("https://discordapp.com/api/channels/" + channelId + "/messages"))
 				.header("content-type", "application/json")
 				.header("Authorization", "Bot " + token)
-				.method("POST", BodyPublishers.ofString("{\"content\":\"" + escapeMessage(message) + "\"}"))
+				.POST(BodyPublishers.ofString("{\"content\":\"" + escapeMessage(message) + "\"}"))
 				.build();
 		return HttpClient.newHttpClient().send(request, BodyHandlers.ofString());
 	}

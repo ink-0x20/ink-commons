@@ -33,7 +33,7 @@ public class ChatworkAPI {
 				.header("accept", "application/json")
 				.header("content-type", "application/x-www-form-urlencoded")
 				.header("x-chatworktoken", token)
-				.method("POST", BodyPublishers.ofString("self_unread=0&body=" + escapeMessage(message)))
+				.POST(BodyPublishers.ofString("self_unread=0&body=" + escapeMessage(message)))
 				.build();
 		return HttpClient.newHttpClient().send(request, BodyHandlers.ofString());
 	}

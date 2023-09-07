@@ -69,7 +69,7 @@ public class GitHubAPI {
 				.header("Accept", "application/vnd.github+json")
 				.header("Authorization", "Bearer " + token)
 				.header("X-GitHub-Api-Version", API_VERSION)
-				.method("POST", BodyPublishers.ofString(ConvertUtils.mapTpJson(requestBody)))
+				.POST(BodyPublishers.ofString(ConvertUtils.mapTpJson(requestBody)))
 				.build();
 		return HttpClient.newHttpClient().send(request, BodyHandlers.ofString());
 	}
@@ -95,7 +95,7 @@ public class GitHubAPI {
 				.header("Authorization", "Bearer " + token)
 				.header("X-GitHub-Api-Version", API_VERSION)
 				.header("Content-Type", "multipart/form-data")
-				.method("POST", BodyPublishers.ofByteArray(data))
+				.POST(BodyPublishers.ofByteArray(data))
 				.build();
 		return HttpClient.newHttpClient().send(request, BodyHandlers.ofString());
 	}
