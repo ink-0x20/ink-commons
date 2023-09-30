@@ -10,12 +10,78 @@ Javaの外部ライブラリを使用せずに作成したライブラリです�
 ## 開発環境
 Java17
 
-## ディレクトリ構成
-### ./src
-- ソース本体
+## 使い方
+### ./src/com/inkblogdb/commons/api
+#### ChatworkAPI
+##### Chatworkでメッセージ送信
+```Java
+HttpResponse<String> chatworkResponse = ChatworkAPI.sendMessage(
+	  "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+	, "12345678"
+	, "test\nです"
+);
+System.out.println(chatworkResponse.body());
+```
 
-### ./src/com/commons
-- 各種パッケージ
+#### DiscordAPI
+##### Discordでメッセージ送信
+```Java
+HttpResponse<String> discordkResponse = DiscordAPI.sendMessage(
+	  "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+	, "12345678"
+	, "test\nです"
+);
+System.out.println(discordkResponse.body());
+```
+
+#### SlackAPI
+##### Slackでメッセージ送信
+```Java
+HttpResponse<String> slackResponse = SlackAPI.sendMessage(
+	  "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+	, "12345678"
+	, "test\nです"
+);
+System.out.println(slackResponse.body());
+```
+
+#### GitHubAPI
+##### GitHubでRelease作成
+```Java
+HttpResponse<String> makeReleaseResponse = GitHubAPI.makeRelease(
+	  "ink-0x20"
+	, "ink-commons"
+	, "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+	, "v1.0.0"
+	, "main"
+	, "説明！"
+);
+System.out.println(makeReleaseResponse.body());
+```
+
+##### GitHubでReleaseにファイルをアップロード
+```Java
+String responseJson = makeReleaseResponse.body();
+String releaseId = responseJson.substring(responseJson.indexOf("\"id\":") + 5);
+releaseId = releaseId.substring(0, releaseId.indexOf(","));
+
+File uploadFile = new File("./test.jar");
+try (FileInputStream fileInputStream = new FileInputStream(uploadFile)) {
+	HttpResponse<String> uploadReleaseResponse =
+			GitHubAPI.uploadRelease(
+					  "ink-0x20"
+					, "ink-commons"
+					, releaseId
+					, uploadFile.getName()
+					, "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+					, fileInputStream.readAllBytes()
+			);
+	System.out.println(uploadReleaseResponse.body());
+} catch (Exception e) {
+	System.out.println("Failed to upload release");
+	System.out.println(e.getMessage());
+}
+```
 
 ## LICENSE
 [MIT](https://github.com/ink-0x20/ink-commons/blob/main/LICENSE)
