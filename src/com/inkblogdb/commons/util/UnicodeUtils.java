@@ -43,8 +43,7 @@ public class UnicodeUtils {
 		return containsUnicodeBlocks(str
 				, UnicodeBlock.HIRAGANA
 				, UnicodeBlock.KATAKANA
-				, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
-				, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_B);
+				, UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS);
 	}
 
 	/**
