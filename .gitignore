@@ -21,8 +21,12 @@ Thumbs.db
 .DS_Store
 
 # Gradle
+gradle
 .gradle
-!gradle-wrapper.jar
+build.gradle.kts
+gradlew
+gradlew.bat
+settings.gradle.kts
 
 # Maven
 target
@@ -40,4 +44,4 @@ war
 
 # Project
 .config
-src/com/inkblogdb/commons/_config
+src/main/java/com/inkblogdb/commons/_config
