@@ -1,5 +1,8 @@
 package com.inkblogdb.commons.api;
 
+import com.inkblogdb.commons.util.ConvertUtils;
+import com.inkblogdb.commons.util.StringUtils;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -28,13 +31,28 @@ public class SlackAPI {
 		StringBuilder body = new StringBuilder();
 		body.append("token=").append(token).append("&");
 		body.append("channel=").append(channelId).append("&");
-		body.append("text=").append(message);
+		body.append("text=").append(escapeMessage(message));
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create("https://slack.com/api/chat.postMessage"))
 				.header("Content-Type", "application/x-www-form-urlencoded; charset=utf-8")
 				.POST(BodyPublishers.ofString(body.toString()))
 				.build();
 		return HttpClient.newHttpClient().send(request, BodyHandlers.ofString());
+	}
+
+	/**
+	 * APIメッセージ用にエスケープ
+	 * @param message メッセージ
+	 * @return エスケープメッセージ
+	 */
+	public static String escapeMessage(final String message) {
+		if (StringUtils.isBlank(message)) {
+			return "";
+		}
+		String str = message;
+		// 改行コード置換
+		str = ConvertUtils.replaceToLf(str);
+		return str;
 	}
 
 }
