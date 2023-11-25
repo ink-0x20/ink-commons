@@ -34,6 +34,16 @@ HttpResponse<String> discordkResponse = DiscordAPI.sendMessage(
 System.out.println(discordkResponse.body());
 ```
 
+#### LineAPI
+##### Lineでメッセージ送信
+```Java
+HttpResponse<String> lineResponse = LineAPI.sendMessage(
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        , "test\nです"
+        );
+        System.out.println(lineResponse.body());
+```
+
 #### SlackAPI
 ##### Slackでメッセージ送信
 ```Java
