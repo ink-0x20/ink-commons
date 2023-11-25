@@ -41,7 +41,7 @@ HttpResponse<String> lineResponse = LineAPI.sendMessage(
         "xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
         , "test\nです"
         );
-        System.out.println(lineResponse.body());
+System.out.println(lineResponse.body());
 ```
 
 #### SlackAPI
