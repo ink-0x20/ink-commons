@@ -11,7 +11,7 @@ public class UrlUtils {
 	 * @param url ドメインを特定したいURL
 	 * @return ドメイン
 	 */
-	public static final String getDomain(final String url) {
+	public static String getDomain(final String url) {
 		if (StringUtils.isBlank(url)) {
 			return "";
 		}
@@ -34,7 +34,7 @@ public class UrlUtils {
 	 * @param isTopLevelDomain トップレベルドメイン(.com等)
 	 * @return ドメイン
 	 */
-	public static final String getDomain(final String url, final boolean isHost, final boolean isTopLevelDomain) {
+	public static String getDomain(final String url, final boolean isHost, final boolean isTopLevelDomain) {
 		if (StringUtils.isBlank(url)) {
 			return "";
 		}
@@ -89,7 +89,7 @@ public class UrlUtils {
 	 * @param paramValue リクエストパラメタ値
 	 * @return リクエストパラメタを付与したURL
 	 */
-	public static final String addUrlParam(final String url, final String paramName, final String paramValue) {
+	public static String addUrlParam(final String url, final String paramName, final String paramValue) {
 		if (StringUtils.isBlank(url)) {
 			return "";
 		}
@@ -112,7 +112,7 @@ public class UrlUtils {
 	 * @param id ID値
 	 * @return IDを付与したURL
 	 */
-	public static final String addUrlId(final String url, final String id) {
+	public static String addUrlId(final String url, final String id) {
 		if (StringUtils.isBlank(url)) {
 			return "";
 		}

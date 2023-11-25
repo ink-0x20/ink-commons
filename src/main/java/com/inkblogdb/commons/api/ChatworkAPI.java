@@ -27,7 +27,7 @@ public class ChatworkAPI {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public static final HttpResponse<String> sendMessage(final String token, final String roomId, final String message) throws IOException, InterruptedException {
+	public static HttpResponse<String> sendMessage(final String token, final String roomId, final String message) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create("https://api.chatwork.com/v2/rooms/" + roomId + "/messages"))
 				.header("accept", "application/json")
@@ -43,7 +43,7 @@ public class ChatworkAPI {
 	 * @param message メッセージ
 	 * @return エスケープメッセージ
 	 */
-	public static final String escapeMessage(final String message) {
+	public static String escapeMessage(final String message) {
 		if (StringUtils.isBlank(message)) {
 			return "";
 		}

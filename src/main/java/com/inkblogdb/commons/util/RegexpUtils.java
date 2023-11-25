@@ -14,7 +14,7 @@ public class RegexpUtils {
 	 * @param regularExpression 正規表現
 	 * @return ヒットすればtrue
 	 */
-	public static final boolean isMatch(final String str, final String regularExpression) {
+	public static boolean isMatch(final String str, final String regularExpression) {
 		String target = str;
 		if (StringUtils.isBlank(target)) {
 			target = "";
@@ -32,7 +32,7 @@ public class RegexpUtils {
 	 * @param regularExpression 正規表現
 	 * @return ヒットしなければtrue
 	 */
-	public static final boolean isNotMatch(final String string, final String regularExpression) {
+	public static boolean isNotMatch(final String string, final String regularExpression) {
 		return !isMatch(string, regularExpression);
 	}
 

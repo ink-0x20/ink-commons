@@ -40,25 +40,25 @@ public class SqlBuilder {
 	private volatile String table = null;
 
 	/** カラム */
-	private List<String> columnList = new ArrayList<>();
+	private final List<String> columnList = new ArrayList<>();
 	/** WHERE */
-	private List<String> whereList = new ArrayList<>();
+	private final List<String> whereList = new ArrayList<>();
 	/** 挿入データ */
-	private List<Map<String, Object>> insertDataList = new ArrayList<>();
+	private final List<Map<String, Object>> insertDataList = new ArrayList<>();
 	/** 更新データ */
-	private List<Map<String, Object>> updateDataList = new ArrayList<>();
+	private final List<Map<String, Object>> updateDataList = new ArrayList<>();
 	/** ORDER BY */
-	private List<String> orderByList = new ArrayList<>();
+	private final List<String> orderByList = new ArrayList<>();
 	/** GROUP BY */
-	private List<String> groupByList = new ArrayList<>();
+	private final List<String> groupByList = new ArrayList<>();
 	/** JOIN */
-	private List<String> joinList = new ArrayList<>();
+	private final List<String> joinList = new ArrayList<>();
 	/** LEFT JOIN */
-	private List<String> leftJoinList = new ArrayList<>();
+	private final List<String> leftJoinList = new ArrayList<>();
 	/** HAVING */
-	private List<String> havingList = new ArrayList<>();
+	private final List<String> havingList = new ArrayList<>();
 	/** UNION */
-	private List<String> unionList = new ArrayList<>();
+	private final List<String> unionList = new ArrayList<>();
 
 	/** LIMIT */
 	private int limit = 0;
@@ -87,7 +87,7 @@ public class SqlBuilder {
 	 * @param name 名前
 	 * @param separatorStr 区切り文字
 	 */
-	private final static void toSqlFormat(final StringBuilder sql, final List<String> values, final String name, final String separatorStr) {
+	private static void toSqlFormat(final StringBuilder sql, final List<String> values, final String name, final String separatorStr) {
 		if (values.size() == 0) {
 			return;
 		}
@@ -112,7 +112,7 @@ public class SqlBuilder {
 	 * @param value 値
 	 * @return {@link SqlBuilder}
 	 */
-	private final static String toSqlString(final Object value) {
+	private static String toSqlString(final Object value) {
 		if (value == null) {
 			return "";
 		}
@@ -145,7 +145,7 @@ public class SqlBuilder {
 	 * @throws SQLException
 	 */
 	@SuppressWarnings("boxing")
-	private static final void setStatementValue(final PreparedStatement preparedStatement, final int paramIndex, final Object value) throws SQLException {
+	private static void setStatementValue(final PreparedStatement preparedStatement, final int paramIndex, final Object value) throws SQLException {
 		if (value instanceof String) {
 			preparedStatement.setString(paramIndex, (String) value);
 		} else if (value instanceof Integer) {
@@ -508,7 +508,7 @@ public class SqlBuilder {
 	 * @return {@link SqlBuilder}
 	 * @throws SQLException
 	 */
-	private final SqlBuilder setConnection(Connection connection) throws SQLException {
+	private SqlBuilder setConnection(Connection connection) throws SQLException {
 		if (this.connection == null) {
 			this.connection = connection;
 		} else if (this.connection.isClosed()) {
@@ -525,7 +525,7 @@ public class SqlBuilder {
 	 * @throws SQLException
 	 * @throws NamingException
 	 */
-	private final Connection getConnection() throws SQLException, NamingException {
+	private Connection getConnection() throws SQLException, NamingException {
 		Connection connect = null;
 		if (this.connection == null || this.connection.isClosed()) {
 			// 接続履歴なしのため接続

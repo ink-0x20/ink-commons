@@ -17,7 +17,7 @@ public class UnicodeUtils {
 	 * @param str 文字列
 	 * @return ひらがなが含まれているかどうか
 	 */
-	public static final boolean containsHiragana(final String str) {
+	public static boolean containsHiragana(final String str) {
 		return containsUnicodeBlocks(str
 				, UnicodeBlock.HIRAGANA);
 	}
@@ -27,7 +27,7 @@ public class UnicodeUtils {
 	 * @param str 文字列
 	 * @return カタカナが含まれているかどうか
 	 */
-	public static final boolean containsKatagana(final String str) {
+	public static boolean containsKatagana(final String str) {
 		return containsUnicodeBlocks(str
 				, UnicodeBlock.KATAKANA);
 	}
@@ -39,7 +39,7 @@ public class UnicodeUtils {
 	 * @param str 文字列
 	 * @return 日本語が含まれているかどうか
 	 */
-	public static final boolean containsJapanese(final String str) {
+	public static boolean containsJapanese(final String str) {
 		return containsUnicodeBlocks(str
 				, UnicodeBlock.HIRAGANA
 				, UnicodeBlock.KATAKANA
@@ -52,7 +52,7 @@ public class UnicodeUtils {
 	 * @param containsUnicodeBlock UnicodeBlock
 	 * @return 指定したUnicodeBlockが含まれているかどうか
 	 */
-	public static final boolean containsUnicodeBlocks(final String str, final UnicodeBlock... containsUnicodeBlock) {
+	public static boolean containsUnicodeBlocks(final String str, final UnicodeBlock... containsUnicodeBlock) {
 		if (str == null) {
 			return false;
 		}

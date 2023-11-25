@@ -649,8 +649,8 @@ public class EncryptUtils {
 		, RSA("RSA", "RSA/ECB/PKCS1Padding")
 		;
 
-		private String encrypt;
-		private String algorithm;
+		private final String encrypt;
+		private final String algorithm;
 
 		/**
 		 * デフォルトコンストラクタ

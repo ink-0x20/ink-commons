@@ -24,7 +24,7 @@ public class SlackAPI {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public static final HttpResponse<String> sendMessage(final String token, final String channelId, final String message) throws IOException, InterruptedException {
+	public static HttpResponse<String> sendMessage(final String token, final String channelId, final String message) throws IOException, InterruptedException {
 		StringBuilder body = new StringBuilder();
 		body.append("token=").append(token).append("&");
 		body.append("channel=").append(channelId).append("&");

@@ -11,7 +11,7 @@ public class StringUtils {
 	 * @param cs 文字列
 	 * @return 空白かどうか
 	 */
-	public static final boolean isBlank(final CharSequence cs) {
+	public static boolean isBlank(final CharSequence cs) {
 		int strLen;
 		if (cs != null && (strLen = cs.length()) != 0) {
 			for(int i = 0; i < strLen; ++i) {
@@ -29,7 +29,7 @@ public class StringUtils {
 	 * @param cs 文字列
 	 * @return 空白でないかどうか
 	 */
-	public static final boolean isNotBlank(final CharSequence cs) {
+	public static boolean isNotBlank(final CharSequence cs) {
 		return !isBlank(cs);
 	}
 
@@ -38,7 +38,7 @@ public class StringUtils {
 	 * @param str 文字列
 	 * @return デフォルト文字列
 	 */
-	public static final String defaultString(final String str) {
+	public static String defaultString(final String str) {
 		return defaultString(str, "");
 	}
 
@@ -48,7 +48,7 @@ public class StringUtils {
 	 * @param defaultStr デフォルト文字列
 	 * @return デフォルト文字列
 	 */
-	public static final String defaultString(final String str, final String defaultStr) {
+	public static String defaultString(final String str, final String defaultStr) {
 		return str == null ? defaultStr : str;
 	}
 
@@ -57,7 +57,7 @@ public class StringUtils {
 	 * @param str 文字列
 	 * @return 連結文字列
 	 */
-	public static final String join(final String... str) {
+	public static String join(final String... str) {
 		if (str == null) {
 			return "";
 		}
@@ -77,7 +77,7 @@ public class StringUtils {
 	 * @param separatorStr 区切り文字列
 	 * @return 分割文字列
 	 */
-	public static final String[] split(final String str, final String separatorStr) {
+	public static String[] split(final String str, final String separatorStr) {
 		if (str == null) {
 			return null;
 		}
@@ -92,7 +92,7 @@ public class StringUtils {
 	 * @param str 文字列
 	 * @return トリムした文字列
 	 */
-	public static final String trim(final String str) {
+	public static String trim(final String str) {
 		if (str == null) {
 			return "";
 		}
@@ -105,7 +105,7 @@ public class StringUtils {
 	 * @param enclose 囲う文字列
 	 * @return 文字列
 	 */
-	public static final String enclose(final String str, final String enclose) {
+	public static String enclose(final String str, final String enclose) {
 		if (str == null) {
 			return "";
 		}

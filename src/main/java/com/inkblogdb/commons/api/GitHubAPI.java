@@ -114,7 +114,7 @@ public class GitHubAPI {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public static final HttpResponse<String> uploadRelease(final String owner, final String repo, final String releaseId, final String filePath, final String token) throws IOException, InterruptedException {
+	public static HttpResponse<String> uploadRelease(final String owner, final String repo, final String releaseId, final String filePath, final String token) throws IOException, InterruptedException {
 		File dataFile = new File(filePath);
 		if (!dataFile.exists()) {
 			return null;

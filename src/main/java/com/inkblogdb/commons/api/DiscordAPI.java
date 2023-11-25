@@ -27,7 +27,7 @@ public class DiscordAPI {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public static final HttpResponse<String> sendMessage(final String token, final String channelId, final String message) throws IOException, InterruptedException {
+	public static HttpResponse<String> sendMessage(final String token, final String channelId, final String message) throws IOException, InterruptedException {
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create("https://discordapp.com/api/channels/" + channelId + "/messages"))
 				.header("content-type", "application/json")
@@ -42,7 +42,7 @@ public class DiscordAPI {
 	 * @param message メッセージ
 	 * @return エスケープメッセージ
 	 */
-	public static final String escapeMessage(final String message) {
+	public static String escapeMessage(final String message) {
 		if (StringUtils.isBlank(message)) {
 			return "";
 		}

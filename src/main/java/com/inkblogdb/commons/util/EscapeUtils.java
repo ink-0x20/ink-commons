@@ -37,7 +37,7 @@ public class EscapeUtils {
 	 * @param str 文字列
 	 * @return HTMLエスケープ後の文字列
 	 */
-	public static final String htmlEscape(final String str) {
+	public static String htmlEscape(final String str) {
 		if (StringUtils.isBlank(str)) {
 			return "";
 		}
@@ -53,7 +53,7 @@ public class EscapeUtils {
 	 * @param str 文字列
 	 * @return HTMLエスケープ前の文字列
 	 */
-	public static final String htmlUnescape(final String str) {
+	public static String htmlUnescape(final String str) {
 		if (StringUtils.isBlank(str)) {
 			return "";
 		}
