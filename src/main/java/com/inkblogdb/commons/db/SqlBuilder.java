@@ -88,7 +88,7 @@ public class SqlBuilder {
 	 * @param separatorStr 区切り文字
 	 */
 	private static void toSqlFormat(final StringBuilder sql, final List<String> values, final String name, final String separatorStr) {
-		if (values.size() == 0) {
+		if (values.isEmpty()) {
 			return;
 		}
 		if (StringUtils.isNotBlank(name)) {
@@ -195,7 +195,6 @@ public class SqlBuilder {
 
 	/**
 	 * テーブルを付与
-	 * @param schema スキーマ
 	 * @param tableName テーブル
 	 * @return {@link SqlBuilder}
 	 */
@@ -371,7 +370,7 @@ public class SqlBuilder {
 	 * @return {@link SqlBuilder}
 	 */
 	public final SqlBuilder insertData(final String column, final Object value) {
-		if (this.insertDataList.size() == 0) {
+		if (this.insertDataList.isEmpty()) {
 			Map<String, Object> data = new LinkedHashMap<>();
 			data.put(StringUtils.enclose(column, "`"), value);
 			this.insertDataList.add(data);
@@ -383,15 +382,15 @@ public class SqlBuilder {
 
 	/**
 	 * 挿入データを付与
-	 * @param datas データ [ カラム名 => 値, ]
+	 * @param dataMap データ [ カラム名 => 値, ]
 	 * @return {@link SqlBuilder}
 	 */
-	public final SqlBuilder insertData(final Map<String, Object> datas) {
-		if (datas == null || datas.size() == 0) {
+	public final SqlBuilder insertData(final Map<String, Object> dataMap) {
+		if (dataMap == null || dataMap.isEmpty()) {
 			return this;
 		}
 		Map<String, Object> value = new LinkedHashMap<>();
-		for (Entry<String, Object> data : datas.entrySet()) {
+		for (Entry<String, Object> data : dataMap.entrySet()) {
 			value.put(StringUtils.enclose(data.getKey(), "`"), data.getValue());
 		}
 		this.insertDataList.add(value);
@@ -405,7 +404,7 @@ public class SqlBuilder {
 	 * @return {@link SqlBuilder}
 	 */
 	public final SqlBuilder updateData(final String column, final Object value) {
-		if (this.updateDataList.size() == 0) {
+		if (this.updateDataList.isEmpty()) {
 			Map<String, Object> data = new LinkedHashMap<>();
 			data.put(StringUtils.enclose(column, "`"), value);
 			this.updateDataList.add(data);
@@ -417,15 +416,15 @@ public class SqlBuilder {
 
 	/**
 	 * 更新データを付与
-	 * @param datas データ [ カラム名 => 値, ]
+	 * @param dataMap データ [ カラム名 => 値, ]
 	 * @return {@link SqlBuilder}
 	 */
-	public final SqlBuilder updateData(final Map<String, Object> datas) {
-		if (datas == null || datas.size() == 0) {
+	public final SqlBuilder updateData(final Map<String, Object> dataMap) {
+		if (dataMap == null || dataMap.isEmpty()) {
 			return this;
 		}
 		Map<String, Object> value = new LinkedHashMap<>();
-		for (Entry<String, Object> data : datas.entrySet()) {
+		for (Entry<String, Object> data : dataMap.entrySet()) {
 			value.put(StringUtils.enclose(data.getKey(), "`"), data.getValue());
 		}
 		this.updateDataList.add(value);
@@ -467,7 +466,7 @@ public class SqlBuilder {
 	 * @param isDistinct DISTINCT
 	 * @return {@link SqlBuilder}
 	 */
-	public final SqlBuilder distonct(final boolean isDistinct) {
+	public final SqlBuilder distinct(final boolean isDistinct) {
 		this.isDistinct = isDistinct;
 		return this;
 	}
@@ -520,13 +519,12 @@ public class SqlBuilder {
 	/**
 	 * DBへ接続
 	 * 接続履歴がある場合はそのまま継続
-	 * @param connection DB接続情報
 	 * @return DB接続情報
 	 * @throws SQLException
 	 * @throws NamingException
 	 */
 	private Connection getConnection() throws SQLException, NamingException {
-		Connection connect = null;
+		Connection connect;
 		if (this.connection == null || this.connection.isClosed()) {
 			// 接続履歴なしのため接続
 			// コネクションプールか通常接続か判定して接続させる
@@ -549,7 +547,6 @@ public class SqlBuilder {
 
 	/**
 	 * 条件リセット
-	 * @param resultSet リザルト
 	 * @throws SQLException
 	 */
 	public final void reset() throws SQLException {
@@ -574,21 +571,21 @@ public class SqlBuilder {
 	 * INSERT用にデータのカラムだけ抽出してSQLに追加
 	 * @param sql SQL
 	 */
-	private final int addDataColumns(final StringBuilder sql) {
-		if (this.insertDataList.size() == 0) {
+	private int addDataColumns(final StringBuilder sql) {
+		if (this.insertDataList.isEmpty()) {
 			return 0;
 		}
 		int count = 0;
 		int dataCount = 0;
 		boolean isMultiple = false;
 		StringBuilder columns = new StringBuilder();
-		for (Map<String, Object> datas : this.insertDataList) {
+		for (Map<String, Object> dataMap : this.insertDataList) {
 			if (count == 0) {
-				count = datas.size();
-			} else if (count != datas.size()) {
+				count = dataMap.size();
+			} else if (count != dataMap.size()) {
 				throw new IllegalArgumentException("data counts do not match");
 			}
-			for (Entry<String, Object> data : datas.entrySet()) {
+			for (Entry<String, Object> data : dataMap.entrySet()) {
 				if (isMultiple) {
 					if (columns.indexOf(data.getKey()) == -1) {
 						dataCount++;
@@ -605,7 +602,7 @@ public class SqlBuilder {
 		if (count != dataCount) {
 			throw new IllegalArgumentException("data counts do not match");
 		}
-		sql.append(columns.toString());
+		sql.append(columns);
 		return count;
 	}
 
@@ -613,19 +610,19 @@ public class SqlBuilder {
 	 * INSERT用にデータの値だけ抽出してSQLに追加
 	 * @param sql SQL
 	 */
-	private final boolean addDataValues(final StringBuilder sql, final int columnCount) {
-		if (this.insertDataList.size() == 0) {
+	private boolean addDataValues(final StringBuilder sql, final int columnCount) {
+		if (this.insertDataList.isEmpty()) {
 			return false;
 		}
 		boolean isValueMultiple = false;
 		boolean isBulkMultiple = false;
 		StringBuilder values = new StringBuilder();
-		for (Map<String, Object> datas : this.insertDataList) {
+		for (Map<String, Object> dataMap : this.insertDataList) {
 			int valueCount = 0;
-			if (datas.size() != columnCount) {
+			if (dataMap.size() != columnCount) {
 				throw new IllegalArgumentException("data counts do not match");
 			}
-			for (Entry<String, Object> data : datas.entrySet()) {
+			for (Entry<String, Object> data : dataMap.entrySet()) {
 				if (isValueMultiple) {
 					values.append(", ");
 					if (this.isStakeHolder) {
@@ -656,7 +653,7 @@ public class SqlBuilder {
 			}
 			isValueMultiple = false;
 		}
-		sql.append(values.toString());
+		sql.append(values);
 		return true;
 	}
 
@@ -664,14 +661,14 @@ public class SqlBuilder {
 	 * UPDATE用にデータをSQLに追加
 	 * @param sql SQL
 	 */
-	private final boolean addData(final StringBuilder sql) {
-		if (this.updateDataList.size() == 0) {
+	private boolean addData(final StringBuilder sql) {
+		if (this.updateDataList.isEmpty()) {
 			return false;
 		}
 		boolean isMultiple = false;
 		StringBuilder values = new StringBuilder();
-		for (Map<String, Object> datas : this.updateDataList) {
-			for (Entry<String, Object> data : datas.entrySet()) {
+		for (Map<String, Object> dataMap : this.updateDataList) {
+			for (Entry<String, Object> data : dataMap.entrySet()) {
 			if (isMultiple) {
 					values.append(", ");
 					values.append(data.getKey());
@@ -693,7 +690,7 @@ public class SqlBuilder {
 				}
 			}
 		}
-		sql.append(values.toString());
+		sql.append(values);
 		return true;
 	}
 
@@ -723,7 +720,7 @@ public class SqlBuilder {
 		}
 		// カラム追加
 		if (StringUtils.isBlank(count)) {
-			if (this.columnList.size() == 0) {
+			if (this.columnList.isEmpty()) {
 				sql.append("*");
 			} else {
 				toSqlFormat(sql, this.columnList, null, ", ");
@@ -787,7 +784,7 @@ public class SqlBuilder {
 	 * @return SELECT SQL
 	 */
 	public final String toInsertSQL() {
-		if (this.insertDataList.size() == 0) {
+		if (this.insertDataList.isEmpty()) {
 			return "";
 		}
 		// SQL作成
@@ -810,7 +807,7 @@ public class SqlBuilder {
 	 */
 	@SuppressWarnings("boxing")
 	public final String toIncrementSQL(final String column) {
-		if (this.insertDataList.size() == 0) {
+		if (this.insertDataList.isEmpty()) {
 			return "";
 		}
 		// インクリメント用データ挿入
@@ -838,7 +835,7 @@ public class SqlBuilder {
 	 * @return UPDATE SQL
 	 */
 	public final String toUpdateSQL() {
-		if (this.updateDataList.size() == 0) {
+		if (this.updateDataList.isEmpty()) {
 			return "";
 		}
 		// SQL作成
@@ -874,7 +871,7 @@ public class SqlBuilder {
 	public final long count(final String count) throws SQLException, NamingException {
 		this.limit = 1;
 		List<Map<String, Object>> result = executeSelect(true, count);
-		if (result.size() == 0) {
+		if (result.isEmpty()) {
 			return 0;
 		}
 		return (long) result.get(0).get("RECORD_COUNT_ALIAS");
@@ -889,7 +886,7 @@ public class SqlBuilder {
 	public final Map<String, Object> getFirst() throws SQLException, NamingException {
 		this.limit = 1;
 		List<Map<String, Object>> result = executeSelect(true, null);
-		if (result.size() == 0) {
+		if (result.isEmpty()) {
 			return new LinkedHashMap<>();
 		}
 		return result.get(0);
@@ -909,7 +906,7 @@ public class SqlBuilder {
 		this.limit = 1;
 		try (Connection connection = getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(toSelectSQL());
-				ResultSet resultSet = preparedStatement.executeQuery();) {
+				ResultSet resultSet = preparedStatement.executeQuery()) {
 			// メタデータ取得
 			ResultSetMetaData meta = resultSet.getMetaData();
 			// 検索
@@ -927,12 +924,8 @@ public class SqlBuilder {
 			setConnection(connection);
 			// 検索後処理を実行し結果を返却
 			return endFunction.apply(resultMap, this);
-		} catch (SQLException e) {
-			throw e;
-		} catch (NamingException e) {
-			throw e;
 		}
-	}
+    }
 
 	/**
 	 * 複数の検索を実行
@@ -957,7 +950,7 @@ public class SqlBuilder {
 		}
 		try (Connection connection = getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(toSelectSQL());
-				ResultSet resultSet = preparedStatement.executeQuery();) {
+				ResultSet resultSet = preparedStatement.executeQuery()) {
 			// メタデータ取得
 			ResultSetMetaData meta = resultSet.getMetaData();
 			// 検索
@@ -976,12 +969,8 @@ public class SqlBuilder {
 			setConnection(connection);
 			// 検索後処理を実行し結果を返却
 			return endFunction.apply(resultList, this);
-		} catch (SQLException e) {
-			throw e;
-		} catch (NamingException e) {
-			throw e;
 		}
-	}
+    }
 
 	/**
 	 * 検索を実行
@@ -990,13 +979,13 @@ public class SqlBuilder {
 	 * @throws SQLException
 	 * @throws NamingException
 	 */
-	private final List<Map<String, Object>> executeSelect(final boolean isFirst, final String count) throws SQLException, NamingException {
+	private List<Map<String, Object>> executeSelect(final boolean isFirst, final String count) throws SQLException, NamingException {
 		if (StringUtils.isBlank(this.table)) {
 			throw new IllegalArgumentException("table is empty");
 		}
 		try (Connection connection = getConnection();
 				PreparedStatement preparedStatement = connection.prepareStatement(toSelectSQL(count));
-				ResultSet resultSet = preparedStatement.executeQuery();) {
+				ResultSet resultSet = preparedStatement.executeQuery()) {
 			// メタデータ取得
 			ResultSetMetaData meta = resultSet.getMetaData();
 			// 検索
@@ -1013,12 +1002,8 @@ public class SqlBuilder {
 				}
 			}
 			return resultList;
-		} catch (SQLException e) {
-			throw e;
-		} catch (NamingException e) {
-			throw e;
 		}
-	}
+    }
 
 	/**
 	 * insertSQLを実行
@@ -1031,12 +1016,12 @@ public class SqlBuilder {
 			throw new IllegalArgumentException("table is empty");
 		}
 		try (Connection connection = getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(toInsertSQL());) {
+				PreparedStatement preparedStatement = connection.prepareStatement(toInsertSQL())) {
 			if (this.isStakeHolder) {
 				// ステークホルダーに値をセット
-				for (Map<String, Object> datas : this.insertDataList) {
+				for (Map<String, Object> dataMap : this.insertDataList) {
 					int paramIndex = 1;
-					for (Entry<String, Object> data : datas.entrySet()) {
+					for (Entry<String, Object> data : dataMap.entrySet()) {
 						setStatementValue(preparedStatement, paramIndex, data.getValue());
 						paramIndex++;
 					}
@@ -1051,10 +1036,6 @@ public class SqlBuilder {
 			return Arrays.stream(count)
 					.boxed()
 					.toArray(Integer[]::new);
-		} catch (SQLException e) {
-			throw e;
-		} catch (NamingException e) {
-			throw e;
 		}
 	}
 
@@ -1069,12 +1050,12 @@ public class SqlBuilder {
 			throw new IllegalArgumentException("table is empty");
 		}
 		try (Connection connection = getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(toUpdateSQL());) {
+				PreparedStatement preparedStatement = connection.prepareStatement(toUpdateSQL())) {
 			if (this.isStakeHolder) {
 				// ステークホルダーに値をセット
 				int paramIndex = 1;
-				Map<String, Object> datas = this.updateDataList.get(0);
-				for (Entry<String, Object> data : datas.entrySet()) {
+				Map<String, Object> dataMap = this.updateDataList.get(0);
+				for (Entry<String, Object> data : dataMap.entrySet()) {
 					setStatementValue(preparedStatement, paramIndex, data.getValue());
 					paramIndex++;
 				}
@@ -1088,10 +1069,28 @@ public class SqlBuilder {
 			return Arrays.stream(count)
 					.boxed()
 					.toArray(Integer[]::new);
-		} catch (SQLException e) {
-			throw e;
-		} catch (NamingException e) {
-			throw e;
+		}
+	}
+
+	/**
+	 * deleteSQLを実行
+	 * @return 更新行数
+	 * @throws SQLException
+	 * @throws NamingException
+	 */
+	public final Integer[] delete() throws SQLException, NamingException {
+		if (StringUtils.isBlank(this.table)) {
+			throw new IllegalArgumentException("table is empty");
+		}
+		try (Connection connection = getConnection();
+			 PreparedStatement preparedStatement = connection.prepareStatement(toDeleteSQL())) {
+			preparedStatement.addBatch();
+			int[] count = preparedStatement.executeBatch();
+			connection.commit();
+			// int配列をInteger配列に変換して返す
+			return Arrays.stream(count)
+					.boxed()
+					.toArray(Integer[]::new);
 		}
 	}
 
@@ -1106,12 +1105,12 @@ public class SqlBuilder {
 			throw new IllegalArgumentException("table is empty");
 		}
 		try (Connection connection = getConnection();
-				PreparedStatement preparedStatement = connection.prepareStatement(toIncrementSQL(column));) {
+				PreparedStatement preparedStatement = connection.prepareStatement(toIncrementSQL(column))) {
 			if (this.isStakeHolder) {
 				// ステークホルダーに値をセット
 				int paramIndex = 1;
-				Map<String, Object> datas = this.insertDataList.get(0);
-				for (Entry<String, Object> data : datas.entrySet()) {
+				Map<String, Object> dataMap = this.insertDataList.get(0);
+				for (Entry<String, Object> data : dataMap.entrySet()) {
 					setStatementValue(preparedStatement, paramIndex, data.getValue());
 					paramIndex++;
 				}
@@ -1125,11 +1124,7 @@ public class SqlBuilder {
 			return Arrays.stream(count)
 					.boxed()
 					.toArray(Integer[]::new);
-		} catch (SQLException e) {
-			throw e;
-		} catch (NamingException e) {
-			throw e;
 		}
-	}
+    }
 
 }
