@@ -1,7 +1,7 @@
 package com.inkblogdb.commons.util;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -19,7 +19,7 @@ public class EscapeUtils {
 	 */
 	static {
 		// 一般的なHTMLエスケープ
-		Map<String, String> initialBasicHtmlEscape = new HashMap<>();
+		Map<String, String> initialBasicHtmlEscape = new LinkedHashMap<>();
 		initialBasicHtmlEscape.put("&", "&amp;");
 		initialBasicHtmlEscape.put("<", "&lt;");
 		initialBasicHtmlEscape.put(">", "&gt;");
