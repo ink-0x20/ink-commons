@@ -772,7 +772,7 @@ public class SqlBuilder {
 	public final String toDeleteSQL() {
 		StringBuilder sql = new StringBuilder("DELETE ");
 		// テーブル追加
-		sql.append(" FROM ");
+		sql.append("FROM ");
 		sql.append(this.table);
 		// 条件追加
 		toSqlFormat(sql, this.whereList, "WHERE", " AND ");
