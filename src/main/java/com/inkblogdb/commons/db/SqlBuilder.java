@@ -87,7 +87,7 @@ public class SqlBuilder {
 	 * @param name 名前
 	 * @param separatorStr 区切り文字
 	 */
-	private static void toSqlFormat(final StringBuilder sql, final List<String> values, final String name, final String separatorStr) {
+	private void toSqlFormat(final StringBuilder sql, final List<String> values, final String name, final String separatorStr) {
 		if (values.isEmpty()) {
 			return;
 		}
@@ -112,7 +112,7 @@ public class SqlBuilder {
 	 * @param value 値
 	 * @return {@link SqlBuilder}
 	 */
-	private static String toSqlString(final Object value) {
+	private String toSqlString(final Object value) {
 		if (value == null) {
 			return "";
 		}
@@ -145,7 +145,7 @@ public class SqlBuilder {
 	 * @throws SQLException
 	 */
 	@SuppressWarnings("boxing")
-	private static void setStatementValue(final PreparedStatement preparedStatement, final int paramIndex, final Object value) throws SQLException {
+	private void setStatementValue(final PreparedStatement preparedStatement, final int paramIndex, final Object value) throws SQLException {
 		if (value instanceof String) {
 			preparedStatement.setString(paramIndex, (String) value);
 		} else if (value instanceof Integer) {
@@ -165,6 +165,51 @@ public class SqlBuilder {
 		} else {
 			preparedStatement.setObject(paramIndex, value);
 		}
+	}
+
+	/**
+	 * バッククォーテーションで文字列を囲む
+	 * @param str 文字列
+	 * @return バッククォーテーションで囲んだ文字列
+	 */
+	private String encloseByBackQuote(final String str) {
+		if (str == null) {
+			return "";
+		}
+		String enclose = "`";
+		String value = str.trim();
+		StringBuilder stringBuilder = new StringBuilder();
+		if (!value.startsWith(enclose)) {
+			stringBuilder.append(enclose);
+		}
+		stringBuilder.append(value);
+		if (!value.endsWith(enclose)) {
+			stringBuilder.append(enclose);
+		}
+		return stringBuilder.toString().replace(".", "`.`");
+	}
+
+	/**
+	 * Stringリストの一つ一つをシングルクォーテーションで囲んだリストに変換
+	 * ["1", "2"] → ["'1'", "'2'"]
+	 * @param str Stringのリスト
+	 * @return シングルクォーテーションで囲み終わったリスト
+	 */
+	private List<String> encloseSingleQuote(final String... str) {
+		return encloseSingleQuote(Arrays.asList(str));
+	}
+
+	/**
+	 * Stringリストの一つ一つをシングルクォーテーションで囲んだリストに変換
+	 * ["1", "2"] → ["'1'", "'2'"]
+	 * @param list Stringのリスト
+	 * @return シングルクォーテーションで囲み終わったリスト
+	 */
+	private List<String> encloseSingleQuote(final List<String> list) {
+		if (list == null) {
+			return List.of();
+		}
+		return list.stream().map((str) -> StringUtils.enclose(str, "'")).toList();
 	}
 
 	/**
@@ -199,7 +244,7 @@ public class SqlBuilder {
 	 * @return {@link SqlBuilder}
 	 */
 	public final SqlBuilder table(final String tableName) {
-		this.table = StringUtils.enclose(tableName, "`");
+		this.table = encloseByBackQuote(tableName);
 		return this;
 	}
 
@@ -210,7 +255,7 @@ public class SqlBuilder {
 	 * @return {@link SqlBuilder}
 	 */
 	public final SqlBuilder table(final String schema, final String tableName) {
-		return this.table(StringUtils.join(StringUtils.enclose(schema, "`"), ".", StringUtils.enclose(tableName, "`")));
+		return this.table(StringUtils.join(encloseByBackQuote(schema), ".", encloseByBackQuote(tableName)));
 	}
 
 	/**
@@ -220,7 +265,7 @@ public class SqlBuilder {
 	 */
 	public final SqlBuilder column(final String... columns) {
 		for (String column : columns) {
-			this.columnList.add(StringUtils.enclose(column, "`"));
+			this.columnList.add(encloseByBackQuote(column));
 		}
 		return this;
 	}
@@ -232,7 +277,7 @@ public class SqlBuilder {
 	 * @return {@link SqlBuilder}
 	 */
 	public final SqlBuilder where(final String column, final Integer value) {
-		return this.where(StringUtils.join(StringUtils.enclose(column, "`"), " = ", String.valueOf(value)));
+		return this.where(StringUtils.join(encloseByBackQuote(column), " = ", String.valueOf(value)));
 	}
 
 	/**
@@ -242,7 +287,7 @@ public class SqlBuilder {
 	 * @return {@link SqlBuilder}
 	 */
 	public final SqlBuilder where(final String column, final String value) {
-		return this.where(StringUtils.join(StringUtils.enclose(column, "`"), " = ", StringUtils.enclose(value, "'")));
+		return this.where(StringUtils.join(encloseByBackQuote(column), " = ", StringUtils.enclose(value, "'")));
 	}
 
 	/**
@@ -252,7 +297,7 @@ public class SqlBuilder {
 	 * @return {@link SqlBuilder}
 	 */
 	public final SqlBuilder whereEqual(final String column, final Integer value) {
-		return this.where(StringUtils.join(StringUtils.enclose(column, "`"), " = ", String.valueOf(value)));
+		return this.where(StringUtils.join(encloseByBackQuote(column), " = ", String.valueOf(value)));
 	}
 
 	/**
@@ -262,7 +307,7 @@ public class SqlBuilder {
 	 * @return {@link SqlBuilder}
 	 */
 	public final SqlBuilder whereEqual(final String column, final String value) {
-		return this.where(StringUtils.join(StringUtils.enclose(column, "`"), " = ", StringUtils.enclose(value, "'")));
+		return this.where(StringUtils.join(encloseByBackQuote(column), " = ", StringUtils.enclose(value, "'")));
 	}
 
 	/**
@@ -272,7 +317,7 @@ public class SqlBuilder {
 	 * @return {@link SqlBuilder}
 	 */
 	public final SqlBuilder whereNot(final String column, final Integer value) {
-		return this.where(StringUtils.join(StringUtils.enclose(column, "`"), " <> ", String.valueOf(value)));
+		return this.where(StringUtils.join(encloseByBackQuote(column), " <> ", String.valueOf(value)));
 	}
 
 	/**
@@ -282,7 +327,7 @@ public class SqlBuilder {
 	 * @return {@link SqlBuilder}
 	 */
 	public final SqlBuilder whereNot(final String column, final String value) {
-		return this.where(StringUtils.join(StringUtils.enclose(column, "`"), " <> ", StringUtils.enclose(value, "'")));
+		return this.where(StringUtils.join(encloseByBackQuote(column), " <> ", StringUtils.enclose(value, "'")));
 	}
 
 	/**
@@ -293,7 +338,7 @@ public class SqlBuilder {
 	 * @return {@link SqlBuilder}
 	 */
 	public final SqlBuilder where(final String column, final String where, final String value) {
-		return this.where(StringUtils.join(StringUtils.enclose(column, "`"), " ", where, " ", StringUtils.enclose(value, "'")));
+		return this.where(StringUtils.join(encloseByBackQuote(column), " ", where, " ", StringUtils.enclose(value, "'")));
 	}
 
 	/**
@@ -313,11 +358,10 @@ public class SqlBuilder {
 	 * @return {@link SqlBuilder}
 	 */
 	public final SqlBuilder whereIn(final String column, final String... values) {
-		StringBuilder where = new StringBuilder(StringUtils.enclose(column, "`"));
-		where.append(" IN (");
-		toSqlFormat(where, Arrays.asList(values), null, ", ");
-		where.append(")");
-		return this.where(where.toString());
+		String where = encloseByBackQuote(column) + " IN (" +
+				String.join(", ", encloseSingleQuote(values)) +
+				")";
+		return this.where(where);
 	}
 
 	/**
@@ -327,11 +371,10 @@ public class SqlBuilder {
 	 * @return {@link SqlBuilder}
 	 */
 	public final SqlBuilder whereNotIn(final String column, final String... values) {
-		StringBuilder where = new StringBuilder(StringUtils.enclose(column, "`"));
-		where.append(" NOT IN (");
-		toSqlFormat(where, Arrays.asList(values), null, ", ");
-		where.append(")");
-		return this.where(where.toString());
+    String where = encloseByBackQuote(column) + " NOT IN (" +
+        String.join(", ", encloseSingleQuote(values)) +
+        ")";
+		return this.where(where);
 	}
 
 	/**
@@ -349,7 +392,7 @@ public class SqlBuilder {
 	 * @return {@link SqlBuilder}
 	 */
 	public final SqlBuilder orderByAsc(final String column) {
-		this.orderByList.add(StringUtils.join(StringUtils.enclose(column, "`"), " ASC"));
+		this.orderByList.add(StringUtils.join(encloseByBackQuote(column), " ASC"));
 		return this;
 	}
 
@@ -359,7 +402,26 @@ public class SqlBuilder {
 	 * @return {@link SqlBuilder}
 	 */
 	public final SqlBuilder orderByDesc(final String column) {
-		this.orderByList.add(StringUtils.join(StringUtils.enclose(column, "`"), " DESC"));
+		this.orderByList.add(StringUtils.join(encloseByBackQuote(column), " DESC"));
+		return this;
+	}
+
+	/**
+	 * 結合
+	 * @param joinTable 結合するテーブル
+	 * @param joinLeftTable 結合する左側のテーブル
+	 * @param joinLeftColumn 結合する左側のカラム
+	 * @param joinRightTable 結合する右側のテーブル
+	 * @param joinRightColumn 結合する右側のカラム
+	 * @return {@link SqlBuilder}
+	 */
+	public final SqlBuilder join(final String joinTable, final String joinLeftTable, final String joinLeftColumn, final String joinRightTable, final String joinRightColumn) {
+		String table = encloseByBackQuote(joinTable);
+		String leftTable = encloseByBackQuote(joinLeftTable);
+		String rightTable = encloseByBackQuote(joinRightTable);
+		String leftColumn = encloseByBackQuote(joinLeftColumn);
+		String rightColumn = encloseByBackQuote(joinRightColumn);
+		this.joinList.add(StringUtils.join(table, " ON ", leftTable, ".", leftColumn, " = ", rightTable, ".", rightColumn));
 		return this;
 	}
 
@@ -372,10 +434,10 @@ public class SqlBuilder {
 	public final SqlBuilder insertData(final String column, final Object value) {
 		if (this.insertDataList.isEmpty()) {
 			Map<String, Object> data = new LinkedHashMap<>();
-			data.put(StringUtils.enclose(column, "`"), value);
+			data.put(encloseByBackQuote(column), value);
 			this.insertDataList.add(data);
 		} else {
-			this.insertDataList.get(this.insertDataList.size() - 1).put(StringUtils.enclose(column, "`"), value);
+			this.insertDataList.get(this.insertDataList.size() - 1).put(encloseByBackQuote(column), value);
 		}
 		return this;
 	}
@@ -391,7 +453,7 @@ public class SqlBuilder {
 		}
 		Map<String, Object> value = new LinkedHashMap<>();
 		for (Entry<String, Object> data : dataMap.entrySet()) {
-			value.put(StringUtils.enclose(data.getKey(), "`"), data.getValue());
+			value.put(encloseByBackQuote(data.getKey()), data.getValue());
 		}
 		this.insertDataList.add(value);
 		return this;
@@ -406,10 +468,10 @@ public class SqlBuilder {
 	public final SqlBuilder updateData(final String column, final Object value) {
 		if (this.updateDataList.isEmpty()) {
 			Map<String, Object> data = new LinkedHashMap<>();
-			data.put(StringUtils.enclose(column, "`"), value);
+			data.put(encloseByBackQuote(column), value);
 			this.updateDataList.add(data);
 		} else {
-			this.updateDataList.get(this.updateDataList.size() - 1).put(StringUtils.enclose(column, "`"), value);
+			this.updateDataList.get(this.updateDataList.size() - 1).put(encloseByBackQuote(column), value);
 		}
 		return this;
 	}
@@ -425,7 +487,7 @@ public class SqlBuilder {
 		}
 		Map<String, Object> value = new LinkedHashMap<>();
 		for (Entry<String, Object> data : dataMap.entrySet()) {
-			value.put(StringUtils.enclose(data.getKey(), "`"), data.getValue());
+			value.put(encloseByBackQuote(data.getKey()), data.getValue());
 		}
 		this.updateDataList.add(value);
 		return this;
@@ -823,9 +885,9 @@ public class SqlBuilder {
 		this.addDataValues(sql, columnCount);
 		sql.append(") ON DUPLICATE KEY UPDATE ");
 		// 更新データ追加
-		sql.append(StringUtils.enclose(column, "`"));
+		sql.append(encloseByBackQuote(column));
 		sql.append(" = ");
-		sql.append(StringUtils.enclose(column, "`"));
+		sql.append(encloseByBackQuote(column));
 		sql.append(" + 1");
 		return sql.append(";").toString();
 	}
